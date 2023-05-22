@@ -4,15 +4,22 @@ using Conditional = System.Diagnostics.ConditionalAttribute;
 
 public class TestPipelineInstance : RenderPipeline
 {
+    private bool dynamicBatching;
+    private bool instancing;
+
     private Material errorMaterial;
 
-    public TestPipelineInstance()
+    public TestPipelineInstance(bool dynamicBatching, bool instancing)
     {
+        this.dynamicBatching = dynamicBatching;
+        this.instancing = instancing;
+
         Shader errorShader = Shader.Find("Hidden/InternalErrorShader");
         errorMaterial = new Material(errorShader)
         {
             hideFlags = HideFlags.HideAndDontSave
         };
+        this.instancing = instancing;
     }
 
     protected override void Render(ScriptableRenderContext renderContext, Camera[] cameras)
@@ -67,6 +74,8 @@ public class TestPipelineInstance : RenderPipeline
 
         FilteringSettings filterSettings = FilteringSettings.defaultValue;
 
+        drawSettings.enableDynamicBatching = dynamicBatching;
+        drawSettings.enableInstancing = instancing;
         // Draw error materials
         drawSettings.overrideMaterial = errorMaterial;
         renderContext.DrawRenderers(
@@ -74,6 +83,8 @@ public class TestPipelineInstance : RenderPipeline
         );
 
         drawSettings = new DrawingSettings(new ShaderTagId("SRPDefaultUnlit"), new SortingSettings());
+        drawSettings.enableDynamicBatching = dynamicBatching;
+        drawSettings.enableInstancing = instancing;
         // Draw Opaque
         filterSettings.renderQueueRange = RenderQueueRange.opaque;
         renderContext.DrawRenderers(

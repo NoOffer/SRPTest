@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a77584405789d6c4c9ce5bca82cf0942, type: 3}
   m_Name: New Test RP Asset
   m_EditorClassIdentifier: 
+  dynamicBatching: 1
